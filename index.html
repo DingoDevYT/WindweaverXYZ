@@ -4,83 +4,822 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Windweaver</title>
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Font Loading */
+        @font-face {
+            font-family: 'ACME Gothic';
+            src: url('fonts/ACME-Gothic.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* CSS Variables */
+        :root {
+            --primary-green: #00ff88;
+            --muted-green: #2d5a3d;
+            --vibrant-orange: #ff6b35;
+            --muted-orange: #8b4513;
+            --dark-grey: #2a2a2a;
+            --charcoal: #1a1a1a;
+            --light-grey: #404040;
+            --white: #ffffff;
+            --text-light: #e0e0e0;
+            --text-muted: #b0b0b0;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'ACME Gothic', 'Arial Black', sans-serif;
+            background-color: var(--charcoal);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hero Section with Video Background */
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.7) 0%, rgba(42, 42, 42, 0.5) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            animation: windFloat 6s ease-in-out infinite;
+        }
+
+        .logo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 30px rgba(0, 255, 136, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.05);
+            filter: drop-shadow(0 15px 40px rgba(0, 255, 136, 0.5));
+        }
+
+        .hero-tagline {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--primary-green);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            border-bottom: 1px solid var(--muted-green);
+        }
+
+        .navigation.visible {
+            transform: translateY(0);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-green), var(--vibrant-orange));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        /* Section Base Styles */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--muted-green), transparent);
+            margin: 4rem auto;
+            width: 80%;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--white);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--vibrant-orange));
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .section.visible .section-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* About Section */
+        .about-content {
+            background: linear-gradient(135deg, var(--dark-grey) 0%, var(--light-grey) 100%);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--muted-green);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease 0.3s;
+        }
+
+        .section.visible .about-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .about-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Abilities Section */
+        .abilities-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+        }
+
+        .ability-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .ability-category {
+            background: var(--dark-grey);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 2px solid var(--muted-green);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section.visible .ability-category:nth-child(1) { transition-delay: 0.2s; }
+        .section.visible .ability-category:nth-child(2) { transition-delay: 0.4s; }
+
+        .section.visible .ability-category {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ability-category:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .ability-list {
+            list-style: none;
+        }
+
+        .ability-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--light-grey);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .ability-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--vibrant-orange);
+            font-size: 0.8rem;
+        }
+
+        .ability-list li:last-child {
+            border-bottom: none;
+        }
+
+        .combo-explanation {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-grey) 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid var(--muted-orange);
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .combo-title {
+            font-size: 2rem;
+            color: var(--vibrant-orange);
+            margin-bottom: 1.5rem;
+        }
+
+        .combo-slots {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+
+        .combo-slot {
+            background: var(--light-grey);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--muted-green);
+            min-width: 150px;
+        }
+
+        .combo-slot.current {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .combo-slot.other {
+            border-color: var(--vibrant-orange);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .slot-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .slot-ability {
+            font-size: 1.2rem;
+            color: var(--white);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--dark-grey);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 2px solid var(--muted-green);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .section.visible .feature-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--vibrant-orange);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--primary-green);
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Gallery */
+        .gallery-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 3rem auto;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--muted-green);
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 255, 136, 0.9);
+            color: var(--charcoal);
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .gallery-nav:hover {
+            background: var(--vibrant-orange);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-nav.prev { left: 20px; }
+        .gallery-nav.next { right: 20px; }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: var(--dark-grey);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 2px solid var(--muted-green);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section.visible .team-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .team-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            overflow: hidden;
+            border: 4px solid var(--primary-green);
+            transition: all 0.3s ease;
+            background: var(--light-grey);
+        }
+
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-card:hover .team-photo {
+            transform: scale(1.05);
+            border-color: var(--vibrant-orange);
+        }
+
+        .team-card h3 {
+            font-size: 1.4rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-card p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-grey) 100%);
+            padding: 4rem 0 2rem;
+            text-align: center;
+            margin-top: 6rem;
+            border-top: 1px solid var(--muted-green);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            color: var(--text-light);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            width: 60px;
+            height: 60px;
+            background: var(--dark-grey);
+            border: 2px solid var(--muted-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--primary-green);
+            color: var(--charcoal);
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes windFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-tagline {
+                font-size: 1.2rem;
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+            }
+
+            .ability-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .combo-slots {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .features-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+
+            .gallery-nav.prev { left: 10px; }
+            .gallery-nav.next { right: 10px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-
-    <!-- Header -->
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                <img src="logo.png" alt="Windweaver Logo" class="logo-image">
+    <!-- Hero Section with Video Background -->
+    <section class="hero-section">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="assets/coverpage-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="logo-container">
+                <img src="logo.png" alt="Windweaver Logo">
             </div>
+            <p class="hero-tagline">Master the Wind. Reclaim the Skies.</p>
         </div>
-    </header>
+        <div class="scroll-indicator" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
 
     <!-- Navigation -->
-    <nav>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
-            <li><a href="#team">Team</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+    <nav class="navigation">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#abilities">Abilities</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <!-- Main Content -->
-    <main>
-        <section id="about" class="section">
-            <h2>About Windweaver</h2>
-            <div class="content-wrapper">
-                <p>Windweaver follows a duck who loses his flight after a devastating event sees him lose his ability to fly. With what wind based ability he has left, he must travel across new lands - using new abilities found throughout each level.</p>
-                <p>This high-speed action platformer focuses on momentum and slope physics, where players chain wind abilities with the environment to create powerful combos and blitz through levels. Collect power-ups, use environmental elements, and build speed across varied landscapes in a quest to reclaim the skies and restore his lost flight through fast-paced platforming action.</p>
-            </div>
-        </section>
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2 class="section-title">About Windweaver</h2>
+        <div class="about-content">
+            <p>Windweaver follows a duck who has lost his flight after a devastating event. With the wind abilities he has left, he must journey across diverse landscapes, discovering new powers and mastering the art of momentum to reclaim his place in the skies.</p>
+            <p>This high-speed action platformer emphasizes fluid movement and slope physics, where skilled players chain wind abilities with environmental elements to build incredible speed and execute spectacular aerial combos. Experience the thrill of windsurfing down mountain slopes, wall-running through ancient ruins, and soaring through the air as you quest to restore your lost flight.</p>
+        </div>
+        <div class="section-divider"></div>
+    </section>
 
-        <section id="features" class="section">
-            <h2>Game Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-wind"></i></div>
-                    <h3>Dynamic Ability Switching</h3>
-                    <p>Switch between different wind abilities mid-level to adapt to challenges. Master the art of swapping between powers to maintain momentum and flow.</p>
+    <!-- Abilities Section -->
+    <section id="abilities" class="section">
+        <h2 class="section-title">Master Your Abilities</h2>
+        <p class="abilities-intro">
+            Combine base movements with collectible ability shards to create powerful combos and navigate challenging terrain with style and speed.
+        </p>
+        
+        <div class="ability-categories">
+            <div class="ability-category">
+                <h3 class="category-title">Base Abilities</h3>
+                <ul class="ability-list">
+                    <li><strong>Run & Jump:</strong> Core movement for traversing terrain</li>
+                    <li><strong>Wall Run:</strong> Scale vertical surfaces with momentum</li>
+                    <li><strong>Windsurf:</strong> Ride slopes to build incredible speed</li>
+                </ul>
+            </div>
+            
+            <div class="ability-category">
+                <h3 class="category-title">Ability Shards</h3>
+                <ul class="ability-list">
+                    <li><strong>Double Jump:</strong> Additional air time and height</li>
+                    <li><strong>Gliding:</strong> Extended air control and distance</li>
+                    <li><strong>Turbo:</strong> Explosive speed boosts</li>
+                    <li><strong>Jetstreaming:</strong> Run across water surfaces</li>
+                    <li><strong>Wall Climbing:</strong> Run directly up vertical walls</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="combo-explanation">
+            <h3 class="combo-title">Dynamic Ability System</h3>
+            <p>Equip two abilities simultaneously and swap between them instantly to create powerful combinations.</p>
+            
+            <div class="combo-slots">
+                <div class="combo-slot current">
+                    <div class="slot-label">CURRENT</div>
+                    <div class="slot-ability">Double Jump</div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-water"></i></div>
-                    <h3>Windsurfing Mechanics</h3>
-                    <p>Ride the wind currents and windsurf across terrain. Use downward slopes to propel yourself through levels at breakneck speeds.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-home"></i></div>
-                    <h3>Living Towns & NPCs</h3>
-                    <p>Explore vibrant towns filled with NPCs offering dialogue, shops for upgrades, missions, and much more to expand your journey.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-users"></i></div>
-                    <h3>Multiplayer Races</h3>
-                    <p>Connect with friends to find out who is the fastest Windweaver amongst you.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    <h3>Momentum-Based Physics</h3>
-                    <p>Experience fluid movement with slope physics that reward skillful play. Chain abilities and windsurfing to build up to incredible speeds.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-gem"></i></div>
-                    <h3>Equippable Pins</h3>
-                    <p>Collect runes and give them to the blacksmith to forge powerful pins, providing stat buffs throughout levels!</p>
+                <div class="combo-slot other">
+                    <div class="slot-label">OTHER</div>
+                    <div class="slot-ability">Gliding</div>
                 </div>
             </div>
-        </section>
+            
+            <p>Use your current ability, swap instantly, then use your other ability - all while airborne for incredible aerial maneuvers!</p>
+        </div>
+        <div class="section-divider"></div>
+    </section>
 
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <h2 class="section-title">Game Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-mountain"></i></div>
+                <h3>Momentum-Based Physics</h3>
+                <p>Master slope physics to build speed downhill and use momentum strategically. Chain windsurfing with jumps to maintain velocity across varied terrain.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-wind"></i></div>
+                <h3>Environmental Interaction</h3>
+                <p>Navigate wind tunnels, dash through air rings, bounce off flowers, and use bridges strategically to maintain your flow through each level.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-home"></i></div>
+                <h3>Living Towns & NPCs</h3>
+                <p>Explore vibrant towns filled with characters offering dialogue, shops for upgrades, missions, and secrets to discover on your journey.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-users"></i></div>
+                <h3>Multiplayer Races</h3>
+                <p>Challenge friends to discover who is the fastest Windweaver. Compete in time trials and races across all levels.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                <h3>Equippable Pins</h3>
+                <p>Collect rare runes and bring them to the blacksmith to forge powerful pins, providing stat buffs and gameplay enhancements.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-magic"></i></div>
+                <h3>Ability Shard Collection</h3>
+                <p>Discover ability shards throughout your journey, each unlocking new movement options and combo possibilities for advanced play.</p>
+            </div>
+        </div>
+        <div class="section-divider"></div>
+    </section>
+
+    <!-- Screenshots Section -->
         <section id="screenshots" class="section">
-            <h2>Screenshots</h2>
+            <h2 class="section-title">Screenshots</h2>
             <div class="gallery-container">
                 <div class="gallery-track">
                     <div class="gallery-slide">
@@ -92,6 +831,12 @@
                     <div class="gallery-slide">
                         <img src="assets/screenshot3.png" alt="Gameplay screenshot 3">
                     </div>
+					<div class="gallery-slide">
+                        <img src="assets/screenshot4.png" alt="Gameplay screenshot 4">
+                    </div>
+					<div class="gallery-slide">
+                        <img src="assets/screenshot5.png" alt="Gameplay screenshot 5">
+                    </div>
                     <!-- Add more slides as needed -->
                 </div>
                 <button class="gallery-nav prev"><i class="fas fa-chevron-left"></i></button>
@@ -100,7 +845,7 @@
         </section>
 
         <section id="team" class="section">
-            <h2>Meet the Team</h2>
+            <h2 class="section-title">Meet Greenfeather Studios</h2>
             <div class="team-grid">
                 <!-- Team Member 1 -->
                 <div class="team-card">
