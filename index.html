@@ -41,6 +41,49 @@
             color: var(--text-light);
             overflow-x: hidden;
             line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Animated Particles Background */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, var(--primary-green), transparent),
+                radial-gradient(2px 2px at 60% 70%, var(--vibrant-orange), transparent),
+                radial-gradient(1px 1px at 50% 50%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 80% 10%, var(--vibrant-orange), transparent),
+                radial-gradient(2px 2px at 90% 60%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 33% 90%, var(--vibrant-orange), transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            animation: particleFloat 20s ease-in-out infinite;
+            opacity: 0.3;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                background-position: 0% 0%;
+                opacity: 0.3;
+            }
+            25% {
+                background-position: 100% 100%;
+                opacity: 0.5;
+            }
+            50% {
+                background-position: 50% 50%;
+                opacity: 0.4;
+            }
+            75% {
+                background-position: 100% 0%;
+                opacity: 0.5;
+            }
         }
 
         /* Hero Section with Video Background */
@@ -93,11 +136,22 @@
             height: auto;
             filter: drop-shadow(0 10px 30px rgba(0, 255, 136, 0.3));
             transition: all 0.3s ease;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% {
+                filter: drop-shadow(0 10px 30px rgba(0, 255, 136, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 15px 50px rgba(0, 255, 136, 0.6));
+            }
         }
 
         .logo-container:hover img {
             transform: scale(1.05);
             filter: drop-shadow(0 15px 40px rgba(0, 255, 136, 0.5));
+            animation: none;
         }
 
         .hero-tagline {
@@ -170,6 +224,26 @@
             height: 2px;
             background: linear-gradient(90deg, var(--primary-green), var(--vibrant-orange));
             transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-green);
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.2), transparent);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: width 0.4s ease, height 0.4s ease;
+            z-index: -1;
+        }
+
+        .nav-links a:hover::before {
+            width: 150%;
+            height: 200%;
         }
 
         .nav-links a:hover::after,
@@ -180,14 +254,79 @@
         .nav-links a:hover {
             color: var(--primary-green);
             transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        /* Section Base Styles */
+        /* Parallax Scrolling Effects */
         .section {
             padding: 6rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Scroll-triggered fade-in animations with different directions */
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Staggered fade-in for content */
+        .about-content p:nth-child(odd) {
+            animation: fadeInLeft 0.8s ease forwards;
+            animation-play-state: paused;
+        }
+
+        .about-content p:nth-child(even) {
+            animation: fadeInRight 0.8s ease forwards;
+            animation-play-state: paused;
+        }
+
+        .section.visible .about-content p {
+            animation-play-state: running;
+        }
+
+        /* Wind effect background for sections */
+        .section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(0, 255, 136, 0.02) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: windSweep 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes windSweep {
+            0%, 100% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 200% 0%;
+            }
         }
 
         .section-divider {
@@ -206,6 +345,21 @@
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s ease;
+            background: linear-gradient(90deg, var(--white), var(--primary-green), var(--vibrant-orange), var(--white));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShine 4s linear infinite;
+        }
+
+        @keyframes titleShine {
+            0% {
+                background-position: 0% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
         }
 
         .section-title::after {
@@ -218,6 +372,17 @@
             left: 50%;
             transform: translateX(-50%);
             border-radius: 2px;
+            box-shadow: 0 0 20px var(--primary-green);
+            animation: underlineGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes underlineGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px var(--primary-green);
+            }
+            50% {
+                box-shadow: 0 0 30px var(--primary-green), 0 0 40px var(--vibrant-orange);
+            }
         }
 
         .section.visible .section-title {
@@ -278,6 +443,35 @@
             transition: all 0.4s ease;
             opacity: 0;
             transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ability-category::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .ability-category:hover::before {
+            opacity: 1;
+            animation: rotateGradient 3s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .section.visible .ability-category:nth-child(1) { transition-delay: 0.2s; }
@@ -289,9 +483,9 @@
         }
 
         .ability-category:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) rotateX(5deg);
             border-color: var(--primary-green);
-            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.2);
         }
 
         .category-title {
@@ -299,82 +493,24 @@
             color: var(--primary-green);
             margin-bottom: 1.5rem;
             text-align: center;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            animation: titlePulse 2s ease-in-out infinite;
         }
 
-        .ability-list {
-            list-style: none;
+        @keyframes titlePulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 30px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4);
+            }
         }
 
-        .ability-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid var(--light-grey);
+        .ability-description {
             color: var(--text-light);
             font-size: 1.1rem;
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .ability-list li::before {
-            content: '▶';
-            position: absolute;
-            left: 0;
-            color: var(--vibrant-orange);
-            font-size: 0.8rem;
-        }
-
-        .ability-list li:last-child {
-            border-bottom: none;
-        }
-
-        .combo-explanation {
-            background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-grey) 100%);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 2px solid var(--muted-orange);
+            line-height: 1.8;
             text-align: center;
-            margin-top: 3rem;
-        }
-
-        .combo-title {
-            font-size: 2rem;
-            color: var(--vibrant-orange);
-            margin-bottom: 1.5rem;
-        }
-
-        .combo-slots {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
-        }
-
-        .combo-slot {
-            background: var(--light-grey);
-            padding: 1.5rem 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--muted-green);
-            min-width: 150px;
-        }
-
-        .combo-slot.current {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-        }
-
-        .combo-slot.other {
-            border-color: var(--vibrant-orange);
-            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
-        }
-
-        .slot-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .slot-ability {
-            font-size: 1.2rem;
-            color: var(--white);
         }
 
         /* Features Grid */
@@ -395,6 +531,7 @@
             transform: translateY(30px);
             position: relative;
             overflow: hidden;
+            perspective: 1000px;
         }
 
         .feature-card::before {
@@ -404,18 +541,35 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
             transition: left 0.8s ease;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .feature-card:hover::before {
             left: 100%;
         }
 
+        .feature-card:hover::after {
+            opacity: 1;
+            animation: rotateGradient 4s linear infinite;
+        }
+
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px) rotateX(5deg) rotateY(-5deg);
             border-color: var(--primary-green);
-            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 255, 136, 0.3), 0 0 80px rgba(0, 255, 136, 0.1);
         }
 
         .section.visible .feature-card {
@@ -423,16 +577,36 @@
             transform: translateY(0);
         }
 
+        .section.visible .feature-card:nth-child(1) { transition-delay: 0.1s; }
+        .section.visible .feature-card:nth-child(2) { transition-delay: 0.2s; }
+        .section.visible .feature-card:nth-child(3) { transition-delay: 0.3s; }
+        .section.visible .feature-card:nth-child(4) { transition-delay: 0.4s; }
+        .section.visible .feature-card:nth-child(5) { transition-delay: 0.5s; }
+        .section.visible .feature-card:nth-child(6) { transition-delay: 0.6s; }
+
         .feature-icon {
             font-size: 3rem;
             color: var(--vibrant-orange);
             margin-bottom: 1.5rem;
             transition: all 0.3s ease;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
         }
 
         .feature-card:hover .feature-icon {
             color: var(--primary-green);
-            transform: scale(1.1);
+            transform: scale(1.2) rotate(360deg);
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.8));
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: scale(1.2) rotate(360deg) translateY(0);
+            }
+            50% {
+                transform: scale(1.3) rotate(360deg) translateY(-10px);
+            }
         }
 
         .feature-card h3 {
@@ -454,9 +628,21 @@
             margin: 3rem auto;
             border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(0, 255, 136, 0.2);
             border: 2px solid var(--muted-green);
             aspect-ratio: 16/9;
+            animation: galleryGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes galleryGlow {
+            0%, 100% {
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 60px rgba(0, 255, 136, 0.2);
+                border-color: var(--muted-green);
+            }
+            50% {
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(0, 255, 136, 0.4);
+                border-color: var(--primary-green);
+            }
         }
 
         .gallery-track {
@@ -495,11 +681,33 @@
             font-size: 1.3rem;
             transition: all 0.3s ease;
             z-index: 10;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.6), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .gallery-nav:hover::before {
+            width: 200%;
+            height: 200%;
         }
 
         .gallery-nav:hover {
             background: var(--vibrant-orange);
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
         }
 
         .gallery-nav.prev { left: 20px; }
@@ -522,6 +730,35 @@
             transition: all 0.4s ease;
             opacity: 0;
             transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 136, 0.1) 50%, transparent 70%);
+            background-size: 200% 200%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .team-card:hover::before {
+            opacity: 1;
+            animation: diagonalShine 1.5s ease infinite;
+        }
+
+        @keyframes diagonalShine {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 200% 200%;
+            }
         }
 
         .section.visible .team-card {
@@ -529,10 +766,17 @@
             transform: translateY(0);
         }
 
+        .section.visible .team-card:nth-child(1) { transition-delay: 0.1s; }
+        .section.visible .team-card:nth-child(2) { transition-delay: 0.2s; }
+        .section.visible .team-card:nth-child(3) { transition-delay: 0.3s; }
+        .section.visible .team-card:nth-child(4) { transition-delay: 0.4s; }
+        .section.visible .team-card:nth-child(5) { transition-delay: 0.5s; }
+        .section.visible .team-card:nth-child(6) { transition-delay: 0.6s; }
+
         .team-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px) rotateY(5deg);
             border-color: var(--primary-green);
-            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.15);
         }
 
         .team-photo {
@@ -544,17 +788,52 @@
             border: 4px solid var(--primary-green);
             transition: all 0.3s ease;
             background: var(--light-grey);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            position: relative;
+        }
+
+        .team-photo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                var(--primary-green),
+                transparent 30%
+            );
+            animation: rotateBorder 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .team-card:hover .team-photo::before {
+            opacity: 1;
         }
 
         .team-photo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: relative;
+            z-index: 1;
         }
 
         .team-card:hover .team-photo {
-            transform: scale(1.05);
+            transform: scale(1.1) rotate(5deg);
             border-color: var(--vibrant-orange);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.6), 0 0 60px rgba(0, 255, 136, 0.3);
         }
 
         .team-card h3 {
@@ -597,13 +876,39 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.4), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+
+        .social-link:hover::before {
+            width: 300%;
+            height: 300%;
         }
 
         .social-link:hover {
             background: var(--primary-green);
             color: var(--charcoal);
-            transform: translateY(-5px);
+            transform: translateY(-8px) rotate(360deg);
             border-color: var(--primary-green);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .social-link i {
+            position: relative;
+            z-index: 1;
         }
 
         .copyright {
@@ -661,12 +966,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .combo-slots {
-                flex-direction: column;
-                align-items: center;
-                gap: 1.5rem;
-            }
-
             .features-grid,
             .team-grid {
                 grid-template-columns: 1fr;
@@ -694,7 +993,7 @@
             <div class="logo-container">
                 <img src="logo.png" alt="Windweaver Logo">
             </div>
-            <p class="hero-tagline">Master the wind - and return to the skies above.</p>
+            <p class="hero-tagline">Shot down from the skies. Now taking the scenic route back home.</p>
         </div>
         <div class="scroll-indicator" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
             <i class="fas fa-chevron-down"></i>
@@ -719,28 +1018,35 @@
     <section id="about" class="section">
         <h2 class="section-title">About Windweaver</h2>
         <div class="about-content">
-            <p>You are a Windweaver — once a guardian of the skies, now stripped of your full power. Cast from the heights, you must begin the long journey back to the Isle of Wind, relying only on the faint power that remains within you.
-
-Every step matters. Every jump demands precision. By bending the wind still at your command, you’ll run faster, leap farther, and cling to walls as you scale your way through a world of environments, obstacles, and pathways.</p>
-            <p>This high-speed action platformer has a direct emphasise on fluid movement and slope physics, where players will chain their abilities with environmental elements to build up incredible speed and execute spectacular combos to blitz through levels. Experience the thrill of windsurfing down mountain slopes, wall-running through ancient ruins, and soaring through the air as keep running to restore your lost flight - and maybe even discover the truth of your world as you meet new friends along the way!</p>
+            <p>You are Jonathan, a Windweaver enforcer patrolling the skies—until a mysterious cannon blast shatters your flight attunement and sends you crashing to the ground. Stripped of your ability to fly, you must rely on the faint power still flickering in your scarf to make the long journey home to the Isle of Wind.</p>
+            <p>This high-speed action platformer emphasizes momentum-based movement and strategic boost management. Master the Wind-Dash to blast forward at incredible speeds, then recharge it mid-air using Fall-Charge. Chain dashes together, navigate obstacles at breakneck velocity, and discover the truth behind your fall as you race through vibrant environments filled with secrets, NPCs, and challenges. Every dash counts—speed is your weapon, and precision is your key to survival.</p>
         </div>
         <div class="section-divider"></div>
     </section>
 
     <!-- Abilities Section -->
     <section id="abilities" class="section">
-        <h2 class="section-title">Master Your Abilities</h2>
+        <h2 class="section-title">Core Movement System</h2>
         <p class="abilities-intro">
-            Combine your base movements with collectible ability shards in leveles to create powerful combos and navigate challenging terrain with style, speed and skill.
+            Master two essential abilities to navigate the world at high speed and chain them together for maximum velocity.
         </p>
         
-        
-        <div class="combo-explanation">
-            <h3 class="combo-title">Dynamic Ability System</h3>
-            <p>Equip two abilities simultaneously and swap between them instantly to create powerful combinations.</p>
+        <div class="ability-categories">
+            <div class="ability-category">
+                <h3 class="category-title">Wind-Dash</h3>
+                <p class="ability-description">
+                    Your primary boost ability. Blast forward in a burst of wind, covering massive distances instantly. Strategic use of Wind-Dash is key to maintaining speed and navigating challenging terrain. Each dash consumes your boost meter, so timing is everything.
+                </p>
+            </div>
             
-            <p>Use your current ability, swap instantly, then use your other ability - all while airborne for incredible aerial maneuvers!</p>
+            <div class="ability-category">
+                <h3 class="category-title">Fall-Charge</h3>
+                <p class="ability-description">
+                    Recharge your boost meter while airborne by channeling the wind during your descent. The longer you fall-charge, the more boost you recover. Balance risk and reward as you decide when to recharge and when to unleash another dash.
+                </p>
+            </div>
         </div>
+        
         <div class="section-divider"></div>
     </section>
 
@@ -749,137 +1055,135 @@ Every step matters. Every jump demands precision. By bending the wind still at y
         <h2 class="section-title">Game Features</h2>
         <div class="features-grid">
             <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Boost-Based Movement</h3>
+                <p>Master the Wind-Dash and Fall-Charge system to maintain momentum and navigate levels at exhilarating speeds.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-gauge-high"></i></div>
+                <h3>Strategic Boost Management</h3>
+                <p>Balance aggressive dashing with smart recharging. Every decision affects your speed and ability to overcome obstacles.</p>
+            </div>
+            
+            <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-mountain"></i></div>
-                <h3>Momentum-Based Physics</h3>
-                <p>Master slopes to build speed downhill and use your speed strategically.</p>
+                <h3>Momentum Physics</h3>
+                <p>Use slopes and terrain to build incredible speed. Combine environmental features with your boost abilities for spectacular combos.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-wind"></i></div>
                 <h3>Environmental Interaction</h3>
-                <p>Navigate wind tunnels, dash through air rings, bounce off flowers, and use bridges strategically to maintain your flow through each level.</p>
+                <p>Navigate wind tunnels, dash through air rings, bounce off flowers, and use environmental elements to maintain flow.</p>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-home"></i></div>
-                <h3>Living Towns & NPCs</h3>
-                <p>Explore vibrant towns filled with characters offering dialogue, shops for upgrades, missions, and secrets to discover on your journey.</p>
+                <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                <h3>Customizable Pins</h3>
+                <p>Craft powerful pins at the blacksmith to modify your abilities and playstyle. Choose enhancements that match your strategy—whether it's faster recharge, extended dashes, or unique mechanics that transform how you move.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+                <h3>Story-Driven Adventure</h3>
+                <p>Uncover the mystery behind your fall as you meet colorful NPCs and discover the truth about the Windweavers and the world below.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon"><i class="fas fa-users"></i></div>
                 <h3>Multiplayer Races</h3>
-                <p>Challenge friends to discover who is the fastest Windweaver. Compete in races across all levels.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-gem"></i></div>
-                <h3>Equippable Pins</h3>
-                <p>Collect rare runes and bring them to the blacksmith to forge powerful pins, providing buffs and enhancements.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-magic"></i></div>
-                <h3>Ability Shard Collection</h3>
-                <p>Discover ability shards throughout levels, each unlocking new movement options and combo possibilities for advanced play.</p>
+                <p>Challenge friends to discover who is the fastest Windweaver. Compete in time trials and races across all levels.</p>
             </div>
         </div>
         <div class="section-divider"></div>
     </section>
 
     <!-- Screenshots Section -->
-        <section id="screenshots" class="section">
-            <h2 class="section-title">Screenshots</h2>
-            <div class="gallery-container">
-                <div class="gallery-track">
-                    <div class="gallery-slide">
-                        <img src="assets/screenshot1.png" alt="Gameplay screenshot 1">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="assets/screenshot2.png" alt="Gameplay screenshot 2">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="assets/screenshot3.png" alt="Gameplay screenshot 3">
-                    </div>
-					<div class="gallery-slide">
-                        <img src="assets/screenshot4.png" alt="Gameplay screenshot 4">
-                    </div>
-					<div class="gallery-slide">
-                        <img src="assets/screenshot5.png" alt="Gameplay screenshot 5">
-                    </div>
-                    <!-- Add more slides as needed -->
+    <section id="screenshots" class="section">
+        <h2 class="section-title">Screenshots</h2>
+        <div class="gallery-container">
+            <div class="gallery-track">
+                <div class="gallery-slide">
+                    <img src="assets/screenshot1.png" alt="Gameplay screenshot 1">
                 </div>
-                <button class="gallery-nav prev"><i class="fas fa-chevron-left"></i></button>
-                <button class="gallery-nav next"><i class="fas fa-chevron-right"></i></button>
+                <div class="gallery-slide">
+                    <img src="assets/screenshot2.png" alt="Gameplay screenshot 2">
+                </div>
+                <div class="gallery-slide">
+                    <img src="assets/screenshot3.png" alt="Gameplay screenshot 3">
+                </div>
+                <div class="gallery-slide">
+                    <img src="assets/screenshot4.png" alt="Gameplay screenshot 4">
+                </div>
+                <div class="gallery-slide">
+                    <img src="assets/screenshot5.png" alt="Gameplay screenshot 5">
+                </div>
             </div>
-        </section>
+            <button class="gallery-nav prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="gallery-nav next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
 
-        <section id="team" class="section">
-            <h2 class="section-title">Meet Greenfeather Studios</h2>
-            <div class="team-grid">
-                <!-- Team Member 1 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/landon.png" alt="Landon Gollop">
-                    </div>
-                    <h3>Landon Gollop</h3>
-                    <p>Project Lead / Lead Programmer</p>
+    <section id="team" class="section">
+        <h2 class="section-title">Meet Greenfeather Studios</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/landon.png" alt="Landon Gollop">
                 </div>
-
-                <!-- Team Member 2 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/josh.png" alt="Josh4359">
-                    </div>
-                    <h3>Josh4359</h3>
-                    <p>Environment Artist / Technical Artist</p>
-                </div>
-
-                <!-- Team Member 3 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/michai.png" alt="Michai McLaughlin">
-                    </div>
-                    <h3>Michai McLaughlin</h3>
-                    <p>3D Artist / Modeller</p>
-                </div>
-				
-				<!-- Team Member 3.5 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/tcooldzn.png" alt="TCoolDzn">
-                    </div>
-                    <h3>TCoolDzn</h3>
-                    <p>3D Animator</p>
-                </div>
-
-                <!-- Team Member 4 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/bryce.png" alt="Bryce Eldridge">
-                    </div>
-                    <h3>Bryce Eldridge</h3>
-                    <p>Level Designer</p>
-                </div>
-
-                <!-- Team Member 5 -->
-                <div class="team-card">
-                    <div class="team-photo">
-                        <img src="assets/team/stuart.png" alt="Stuart Woolley">
-                    </div>
-                    <h3>Stuart Woolley</h3>
-                    <p>Musician</p>
-                </div>
-				
-				
+                <h3>Landon Gollop</h3>
+                <p>Project Lead / Lead Programmer</p>
             </div>
-        </section>
-    </main>
 
-    <footer id="contact">
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/josh.png" alt="Josh4359">
+                </div>
+                <h3>Josh4359</h3>
+                <p>Environment Artist / Technical Artist</p>
+            </div>
+
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/michai.png" alt="Michai McLaughlin">
+                </div>
+                <h3>Michai McLaughlin</h3>
+                <p>3D Artist / Modeller</p>
+            </div>
+            
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/tcooldzn.png" alt="TCoolDzn">
+                </div>
+                <h3>TCoolDzn</h3>
+                <p>3D Animator</p>
+            </div>
+
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/bryce.png" alt="Bryce Eldridge">
+                </div>
+                <h3>Bryce Eldridge</h3>
+                <p>Level Designer</p>
+            </div>
+
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="assets/team/stuart.png" alt="Stuart Woolley">
+                </div>
+                <h3>Stuart Woolley</h3>
+                <p>Musician</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
         <div class="social-links">
-            <a href="https://www.youtube.com/@windweaver-official" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://x.com/WindweaverGFS" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/@GreenfeatherStudios" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/windweavergfs/" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@greenfeatherdev" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://x.com/Windweaver_GFS" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://discord.gg/EzJgdtCVK5" class="social-link" target="_blank"><i class="fab fa-discord"></i></a>
         </div>
         <p class="copyright">&copy; 2025 Windweaver. All rights reserved.</p>
